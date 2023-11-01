@@ -1,0 +1,10 @@
+<div>
+  <ul>
+    <li *ngFor="let item of selectedCollection.items">
+      <div>{{ item.id }}</div>
+      <div>{{ item.name }}</div>
+    </li>
+  </ul>
+</div>
+
+<button (click)="create()">Create new item</button>

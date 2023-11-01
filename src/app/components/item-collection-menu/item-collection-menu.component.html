@@ -1,0 +1,14 @@
+<div>
+  <ul>
+    <li *ngFor="let item of collections" (click)="select(item)">
+      <div>{{ item.id }}</div>
+      <div>{{ item.created_at }}</div>
+      <div>{{ item.updated_on }}</div>
+    </li>
+  </ul>
+  <button (click)="create()">Create new collection</button>
+</div>
+
+<ng-template [ngIf]="selectedCollection !== undefined">
+  <app-item-collection-view [selectedCollection]="selectedCollection!"></app-item-collection-view>
+</ng-template>
