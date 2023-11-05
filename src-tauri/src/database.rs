@@ -91,17 +91,33 @@ pub fn get_last_item(db: &Connection) -> Result<Item, rusqlite::Error> {
     })
 }
 
-pub fn get_all(db: &Connection) -> Result<Vec<ItemCollection>, rusqlite::Error> {
-    let mut statement = db.prepare("SELECT id, created_at, updated_on FROM item_collections")?;
-    let mut rows = statement.query([])?;
+fn get_all_items_from_col(db: &Connection, id: i16) -> Result<Vec<Item>, rusqlite::Error> {
+    let mut statement = db.prepare("SELECT id, name FROM item WHERE item_collection_id == ?1")?;
+    let mut rows = statement.query([&id])?;
     let mut items = Vec::new();
     while let Some(row) = rows.next()? {
-        items.push(ItemCollection {
+        items.push(Item {
         id: row.get(0)?,
-        created_at: row.get(1)?,
-        updated_on: row.get(2)?,
-        items: Some(vec![])
+        name: row.get(1)?
         });
+    }
+  
+    Ok(items)
+}
+
+pub fn get_all(db: &Connection) -> Result<Vec<ItemCollection>, rusqlite::Error> {
+    let mut statement = db.prepare("SELECT item_collections.id, item_collections.created_at, item_collections.updated_on FROM item_collections INNER JOIN item on item_collections.id = item.id")?;
+    let mut rows = statement.query([])?;
+    let mut items = Vec::new();
+    while let Some(row) = rows.next()? { 
+        let id = row.get(0)?;
+        let item = ItemCollection {
+            id,
+            created_at: row.get(1)?,
+            updated_on: row.get(2)?,
+            items: Some(get_all_items_from_col(db, id)?)
+        };
+        items.push(item);
     }
   
     Ok(items)
