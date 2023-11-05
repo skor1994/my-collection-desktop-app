@@ -1,14 +1,17 @@
-<div>
-  <ul>
-    <li *ngFor="let item of collections" (click)="select(item)">
-      <div>{{ item.id }}</div>
-      <div>{{ item.created_at }}</div>
-      <div>{{ item.updated_on }}</div>
-    </li>
-  </ul>
-  <button (click)="create()">Create new collection</button>
-</div>
-
-<ng-template [ngIf]="selectedCollection !== undefined">
-  <app-item-collection-view [selectedCollection]="selectedCollection!"></app-item-collection-view>
-</ng-template>
+<mat-drawer-container class="h-full flex flex-row">
+  <mat-drawer mode="side" opened class="w-1/3">
+    <ul>
+      <li *ngFor="let item of collections" (click)="select(item)">
+        <div>{{ item.id }}</div>
+        <div>{{ item.created_at }}</div>
+        <div>{{ item.updated_on }}</div>
+      </li>
+    </ul>
+    <button (click)="create()">Create new collection</button>
+  </mat-drawer>
+  <mat-drawer-content class="w-2/3">
+    <ng-template [ngIf]="selectedCollection !== undefined">
+      <app-item-collection-view [selectedCollection]="selectedCollection!"></app-item-collection-view>
+    </ng-template>
+  </mat-drawer-content>
+</mat-drawer-container>
